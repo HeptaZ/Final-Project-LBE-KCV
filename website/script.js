@@ -117,19 +117,31 @@ function kumpulkanData() {
   return data;
 }
 
-// TODO: Hubungkan model prediksi di sini (Linear Regression / Decision Tree / KNN)
-// data.model-prediksi berisi 'lr', 'dt', atau 'knn'
-function predictFlood(data) {
-  // TODO: implementasi model prediksi berdasarkan data['model-prediksi']
-  // Contoh: return { status: 'Banjir', probabilitas: 0.87 };
-  return null;
+// Alamat backend Flask (app.py). Ubah kalau kamu deploy di tempat lain.
+const API_URL = 'http://127.0.0.1:5000/predict';
+
+// Panggil model prediksi lewat backend Flask (lihat app.py).
+// data['model-prediksi'] berisi 'lr', 'dt', atau 'knn'
+async function predictFlood(data) {
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error || `Server merespons dengan status ${response.status}`);
+  }
+
+  return response.json(); // { status: 'Banjir' | 'Tidak Banjir', prediksi, probabilitas }
 }
 
 // Label ramah untuk nilai model
 const MODEL_LABEL = { lr: 'Linear Regression', dt: 'Decision Tree', knn: 'K-Nearest Neighbors (KNN)' };
 
-// Tampilkan ringkasan input di area #result
-function tampilkanHasil(data) {
+// Tampilkan hasil prediksi + ringkasan input di area #result
+function tampilkanHasil(data, prediksi) {
   const urutan = ['model-prediksi', ...FIELDS_INPUT.map(f => f.id), 'nama-daerah'];
 
   const baris = urutan.map(id => {
@@ -138,12 +150,27 @@ function tampilkanHasil(data) {
     return `<div><strong>${LABEL_MAP[id]}:</strong> ${nilai}</div>`;
   }).join('');
 
-  resultIsi.innerHTML = baris;
+  let statusHtml = '';
+  if (prediksi) {
+    const kelas = prediksi.status === 'Banjir' ? 'status--banjir' : 'status--aman';
+    const persen = Array.isArray(prediksi.probabilitas)
+      ? ` (keyakinan ${(Math.max(...prediksi.probabilitas) * 100).toFixed(1)}%)`
+      : '';
+    statusHtml = `<div class="status-badge ${kelas}">Status: ${prediksi.status}${persen}</div>`;
+  }
+
+  resultIsi.innerHTML = statusHtml + baris;
+  result.hidden = false;
+}
+
+// Tampilkan pesan error umum (mis. gagal terhubung ke backend) di area #result
+function tampilkanErrorUmum(pesan) {
+  resultIsi.innerHTML = `<div class="status-badge status--error">${pesan}</div>`;
   result.hidden = false;
 }
 
 // Event: submit form
-form.addEventListener('submit', function (e) {
+form.addEventListener('submit', async function (e) {
   e.preventDefault();
   bersihkanError();
   result.hidden = true;
@@ -151,8 +178,24 @@ form.addEventListener('submit', function (e) {
   if (!validasiForm()) return;
 
   const data = kumpulkanData();
-  predictFlood(data);
-  tampilkanHasil(data);
+  const btnSubmit = form.querySelector('.btn--prediksi');
+  const labelAsli = btnSubmit.textContent;
+
+  btnSubmit.disabled = true;
+  btnSubmit.textContent = 'Memprediksi...';
+
+  try {
+    const prediksi = await predictFlood(data);
+    tampilkanHasil(data, prediksi);
+  } catch (err) {
+    // Biasanya ini terjadi kalau backend (app.py) belum dijalankan
+    tampilkanErrorUmum(
+      `Gagal memprediksi: ${err.message}. Pastikan backend (app.py) sedang berjalan di ${API_URL}.`
+    );
+  } finally {
+    btnSubmit.disabled = false;
+    btnSubmit.textContent = labelAsli;
+  }
 });
 
 // Event: tombol Reset
