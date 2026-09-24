@@ -53,3 +53,59 @@ Notebook dapat dibuka dan dijalankan melalui beberapa alternatif platform:
 > File **`data_finish.csv` WAJIB berada di dalam satu folder (direktori kerja) yang sama** dengan file **`FP_LBE_KCV.ipynb`**. Jika file dataset tidak berada di direktori yang sama, pembacaan data (`pd.read_csv('data_finish.csv')`) akan menghasilkan pesan *error (FileNotFoundError)*.
 
 ---
+
+## Flowchart
+
+```mermaid
+graph TD
+    %% Nodes Declaration
+    A("Dataset Input (CSV)")
+    B("Inisialisasi & Standarisasi Nama Kolom")
+    C("Exploratory Data Analysis (EDA)<br>- Analisis Deskriptif<br>- Penanganan Missing Value<br>- Konversi Arah Angin")
+    D("Preprocessing Pipeline<br>- Feature Extraction Tanggal<br>- One-Hot Encoding<br>- Feature Dropping")
+    E("Dataset Final Siap Latih")
+    
+    F{"Pemisahan Data (Train & Test)"}
+    G("StandardScaler (Penskalaan Fitur)")
+
+    M1("Model 1: Decision Tree")
+    M2("Model 2: K-Nearest Neighbors (KNN)")
+    M3("Model 3: Logistic Regression")
+
+    H("Evaluasi Model pada Data Uji<br>(Akurasi, Precision, Recall, F1-Score)")
+    I("Kesimpulan & Rekomendasi Model")
+
+    %% Alur Utama
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+
+    %% Alur Pemodelan (Dengan & Tanpa Scaling)
+    F -->|"Tanpa Scaling"| M1
+    F -->|"Scaling Fitur"| G
+
+    G --> M2
+    G --> M3
+
+    %% Alur Evaluasi
+    M1 --> H
+    M2 --> H
+    M3 --> H
+
+    H --> I
+
+    %% Class Assignment (Safe Method)
+    classDef startEnd fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff;
+    classDef process fill:#ecf0f1,stroke:#bdc3c7,stroke-width:2px,color:#2c3e50;
+    classDef split fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#fff;
+    classDef model fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff;
+    classDef eval fill:#2ecc71,stroke:#27ae60,stroke-width:2px,color:#fff;
+
+    class A,E,I startEnd;
+    class B,C,D,G process;
+    class F split;
+    class M1,M2,M3 model;
+    class H eval;
+```
