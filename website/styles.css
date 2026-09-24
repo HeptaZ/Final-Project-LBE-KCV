@@ -1,40 +1,281 @@
+/* =====================
+   CSS Variables
+   ===================== */
+:root {
+  --color-bg: #f4f4f4;
+  --color-card: #ffffff;
+  --color-text-heading: #333;
+  --color-text-desc: #666;
+  --color-text-label: #555;
+  --color-border: #ccc;
+  --color-border-error: #c0392b;
+  --color-error-text: #c0392b;
+  --color-btn-primary: #222;
+  --color-btn-primary-hover: #444;
+  --color-btn-reset-border: #888;
+  --color-btn-reset-text: #555;
+  --color-btn-reset-hover-bg: #eee;
+  --color-focus: #555;
+  --color-result-bg: #f9f9f9;
+  --color-result-border: #ddd;
+  --radius-input: 4px;
+  --radius-card: 8px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 40px;
+  --font: monospace;
+}
+
+/* =====================
+   Reset & Base
+   ===================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
-    font-family: monospace;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    text-align: center;
+  margin: 0;
+  padding: var(--spacing-xl) var(--spacing-md);
+  background: var(--color-bg);
+  font-family: var(--font);
+  color: var(--color-text-heading);
+  text-align: center;
 }
 
-
-
-#prg {
-    font-size: 25px;
-    color: #333;
+/* =====================
+   Layout Container
+   ===================== */
+main {
+  max-width: 720px;
+  margin: 0 auto;
 }
 
-#title {
-    margin-top: 100px;
-    font-size: 30px;
-    font-weight: bold;
-    color: #333;
+/* =====================
+   Header
+   ===================== */
+header {
+  margin-bottom: var(--spacing-lg);
 }
 
-#description {
-    font-size: 18px;
-    color: #666;
-    margin-bottom: 20px;
+h1 {
+  font-size: 30px;
+  font-weight: bold;
+  color: var(--color-text-heading);
+  margin: 0 0 var(--spacing-sm);
+  line-height: 1.3;
 }
 
-#input-instructions {
+h3 {
+  font-size: 25px;
+  font-weight: normal;
+  color: var(--color-text-heading);
+  margin: 0 0 var(--spacing-sm);
+}
+
+.deskripsi {
+  font-size: 18px;
+  color: var(--color-text-desc);
+  margin: 0;
+}
+
+/* =====================
+   Card
+   ===================== */
+.card {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: var(--spacing-lg);
+  text-align: left;
+}
+
+/* =====================
+   Form Grid
+   ===================== */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+/* Field Nama Daerah mengisi penuh 2 kolom */
+.field--full {
+  grid-column: 1 / -1;
+}
+
+/* =====================
+   Label & Input
+   ===================== */
+label {
+  font-size: 16px;
+  color: var(--color-text-label);
+  font-family: var(--font);
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  font-family: var(--font);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-input);
+  background: #fff;
+  color: var(--color-text-heading);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 2px rgba(85, 85, 85, 0.15);
+}
+
+input.input--error,
+select.input--error {
+  border-color: var(--color-border-error);
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  font-family: var(--font);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-input);
+  background: #fff;
+  color: var(--color-text-heading);
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23555' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+select option[value=""] {
+  color: #aaa;
+}
+
+/* Dropdown model di atas grid, sedikit lebih menonjol */
+.field--model {
+  margin-bottom: var(--spacing-md);
+}
+
+.field--model select {
+  font-weight: bold;
+}
+
+/* =====================
+   Pesan Error
+   ===================== */
+.error {
+  font-size: 13px;
+  color: var(--color-error-text);
+  min-height: 16px;
+  display: block;
+}
+
+/* =====================
+   Tombol Aksi
+   ===================== */
+.aksi {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.btn {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  font-family: var(--font);
+  border-radius: var(--radius-input);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn--prediksi {
+  background: var(--color-btn-primary);
+  color: #fff;
+  border: 2px solid var(--color-btn-primary);
+}
+
+.btn--prediksi:hover {
+  background: var(--color-btn-primary-hover);
+  border-color: var(--color-btn-primary-hover);
+}
+
+.btn--reset {
+  background: transparent;
+  color: var(--color-btn-reset-text);
+  border: 2px solid var(--color-btn-reset-border);
+}
+
+.btn--reset:hover {
+  background: var(--color-btn-reset-hover-bg);
+}
+
+/* =====================
+   Area Hasil
+   ===================== */
+.result {
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: var(--color-result-bg);
+  border: 1px solid var(--color-result-border);
+  border-radius: var(--radius-input);
+}
+
+.result h4 {
+  margin: 0 0 var(--spacing-sm);
+  font-size: 16px;
+  color: var(--color-text-heading);
+}
+
+#result-isi {
+  font-size: 14px;
+  color: var(--color-text-desc);
+  line-height: 1.8;
+}
+
+.result-note {
+  margin: var(--spacing-sm) 0 0;
+  font-size: 14px;
+  color: var(--color-text-desc);
+  font-style: italic;
+}
+
+/* =====================
+   Responsive — 1 kolom di mobile
+   ===================== */
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field--full {
+    grid-column: 1;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  .deskripsi {
     font-size: 16px;
-    color: #999;
-    margin-bottom: 10px;
-}
-
-#input-field {
-    width: 300px;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 4px;
+  }
 }

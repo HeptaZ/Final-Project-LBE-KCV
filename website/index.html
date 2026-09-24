@@ -1,28 +1,122 @@
 <!DOCTYPE html>
-
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5 | jeneng tim e opo cak?</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5 | jeneng tim e opo cak?</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-
-
 <body>
-    <h1  id="title">Prediksi Status Banjir Berdasarkan Parameter Cuaca dari BMKG Menggunakan Algoritma Linear Regression, Decision Tree, dan KNN</h1>
-    <h3  id="prg">Kelompok 5</h3>
-    <p  id="description">Masukkan data cuaca dari BMKG untuk memprediksi status banjir</p>
-    <p  id="input-instructions">Temperatur terendah (°C):  <input type="text" id="inputField" placeholder="Misal: 25.6"> </p>
-    <p  id="input-instructions">Temperatur tertinggi (°C):  <input type="text" id="inputField" placeholder="Misal: 33.2"> </p>
-    <p  id="input-instructions">Rata rata Temperatur (°C):  <input type="text" id="inputField" placeholder="Misal: 27"> </p>
-    <p  id="input-instructions">Rata rata kelembapan (%):  <input type="text" id="inputField" placeholder="Misal: 88"> </p>
-    <p  id="input-instructions">Curah Hujan (mm):  <input type="text" id="inputField" placeholder="Misal: 1.6"> </p>
-    <p  id="input-instructions">Durasi matahari/cerah (jam):  <input type="text" id="inputField" placeholder="Misal: 8.7"> </p>
-    <p  id="input-instructions">Kecepatan angin tertinggi (m/s):  <input type="text" id="inputField" placeholder="Misal: 4"> </p>
-    <p  id="input-instructions">Arah Angin tertinggi (°)  <input type="text" id="inputField" placeholder="Misal: 290"> </p>
-    <p  id="input-instructions">Rata-rata kecepatan Angin (m/s):  <input type="text" id="inputField" placeholder="Misal: 2"> </p>
-    <p  id="input-instructions">Arah angin terbanyak (°):  <input type="text" id="inputField" placeholder="Misal: N"> </p>
-    <p  id="input-instructions">Nama Daerah:  <input type="text" id="inputField" placeholder="Misal: Jakarta"> </p>
+  <main>
+    <header>
+      <h1>Prediksi Status Banjir Berdasarkan Parameter Cuaca dari BMKG Menggunakan Algoritma Linear Regression, Decision Tree, dan KNN</h1>
+      <h3>Kelompok 5</h3>
+      <p class="deskripsi">Masukkan data cuaca dari BMKG untuk memprediksi status banjir</p>
+    </header>
 
+    <div class="card">
+      <form id="form-prediksi" novalidate>
+
+        <div class="field field--full field--model">
+          <label for="model-prediksi">Model Prediksi</label>
+          <select id="model-prediksi" name="model-prediksi">
+            <option value="">-- Pilih Model --</option>
+            <option value="lr">Linear Regression</option>
+            <option value="dt">Decision Tree</option>
+            <option value="knn">K-Nearest Neighbors (KNN)</option>
+          </select>
+          <span class="error" aria-live="polite"></span>
+        </div>
+
+        <div class="grid">
+
+          <div class="field">
+            <label for="suhu-min">Temperatur terendah (°C)</label>
+            <input type="text" id="suhu-min" name="suhu-min" inputmode="decimal" placeholder="Misal: 25.6" autocomplete="off" />
+            <span class="error" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="suhu-max">Temperatur tertinggi (°C)</label>
+            <input type="text" id="suhu-max" name="suhu-max" inputmode="decimal" placeholder="Misal: 33.2" autocomplete="off" />
+            <span class="error" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="suhu-rata">Rata rata Temperatur (°C)</label>
+            <input type="text" id="suhu-rata" name="suhu-rata" inputmode="decimal" placeholder="Misal: 27" autocomplete="off" />
+            <span class="error" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="kelembapan">Rata rata kelembapan (%)</label>
+            <input type="text" id="kelembapan" name="kelembapan" inputmode="decimal" placeholder="Misal: 88" autocomplete="off" />
+            <span class="error" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="curah-hujan">Curah Hujan (mm)</label>
+            <input type="text" id="curah-hujan" name="curah-hujan" inputmode="decimal" placeholder="Misal: 1.6" autocomplete="off" />
+            <span class="error" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="durasi-matahari">Durasi matahari/cerah (jam)</label>
+            <input type="text" id="durasi-matahari" name="durasi-matahari" inputmode="decimal" placeholder="Misal: 8.7" autocomplete="off" />
+            <span class="error" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="angin-max">Kecepatan angin tertinggi (m/s)</label>
+            <input type="text" id="angin-max" name="angin-max" inputmode="decimal" placeholder="Misal: 4" autocomplete="off" />
+            <span class="error" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="arah-angin-max">Arah Angin tertinggi (°)</label>
+            <input type="text" id="arah-angin-max" name="arah-angin-max" inputmode="decimal" placeholder="Misal: 290" autocomplete="off" />
+            <span class="error" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="angin-rata">Rata-rata kecepatan Angin (m/s)</label>
+            <input type="text" id="angin-rata" name="angin-rata" inputmode="decimal" placeholder="Misal: 2" autocomplete="off" />
+            <span class="error" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="arah-angin-terbanyak">Arah angin terbanyak (°)</label>
+            <input type="text" id="arah-angin-terbanyak" name="arah-angin-terbanyak" placeholder="Misal: N" autocomplete="off" />
+            <span class="error" aria-live="polite"></span>
+          </div>
+
+          <div class="field field--full">
+            <label for="nama-daerah">Nama Daerah</label>
+            <select id="nama-daerah" name="nama-daerah">
+              <option value="">-- Pilih Daerah --</option>
+              <option value="Jakarta Utara">Jakarta Utara</option>
+              <option value="Jakarta Selatan">Jakarta Selatan</option>
+              <option value="Jakarta Pusat">Jakarta Pusat</option>
+            </select>
+            <span class="error" aria-live="polite"></span>
+          </div>
+
+        </div>
+
+        <div class="aksi">
+          <button type="submit" class="btn btn--prediksi">Prediksi</button>
+          <button type="button" id="btn-reset" class="btn btn--reset">Reset</button>
+        </div>
+      </form>
+
+      <div id="result" class="result" hidden>
+        <h4>Ringkasan Input</h4>
+        <div id="result-isi"></div>
+        <p class="result-note">Data siap diproses oleh model prediksi.</p>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js" defer></script>
 </body>
+</html>
