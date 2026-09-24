@@ -1,28 +1,28 @@
-# Final Project LBE KCV - Prediksi Status Banjir Berdasarkan Parameter Cuaca dari BMKG Menggunakan Algoritma Linear Regression, Decision Tree, dan KNN
+# Final Project LBE KCV - Prediksi Status Banjir Berdasarkan Parameter Cuaca dari BMKG Menggunakan Algoritma Logistic Regression, Decision Tree, dan KNN
 
 ---
 
 ## Sumber Dataset
 
-Dataset yang digunakan dalam proyek ini bersumber dari:
 * **Dataset:** [Climate and Flood Jakarta](https://www.kaggle.com/datasets/christopherrichardc/climate-and-flood-jakarta/) (Kaggle)
-* **Deskripsi:** Dataset ini berisi data historis parameter iklim/cuaca harian seperti temperatur, kelembapan, curah hujan, kecepatan angin, dan penyinaran matahari beserta label kejadian banjir di DKI Jakarta.
+* **Deskripsi:** Dataset ini berisi data historis parameter iklim/cuaca harian seperti temperatur, kelembapan, curah hujan, kecepatan angin, arah angin, dan durasi penyinaran matahari beserta label kejadian banjir di wilayah DKI Jakarta.
 
 ---
 
 ## Struktur Repositori
 
-
 ```text
-├── FP_LBE_KCV.ipynb     # Jupyter Notebook utama
-├── data_finish.csv      # File dataset 
-└── requirements.txt     # Daftar pustaka (dependencies)
+├── FP_LBE_KCV.ipynb     # Jupyter Notebook utama alur Machine Learning
+├── data_finish.csv      # File dataset cuaca & banjir
+├── requirements.txt     # Daftar dependensi pustaka Python
+├── README.md            # Dokumentasi proyek
+└── website/             # Folder web dashboard aplikasi (opsional)
 ```
 
 ### Rincian File:
-1. **`FP_LBE_KCV.ipynb`**: File Jupyter Notebook utama yang memuat alur lengkap eksperimen Machine Learning.
+1. **`FP_LBE_KCV.ipynb`**: File Jupyter Notebook utama yang memuat alur lengkap eksperimen Machine Learning (EDA, Preprocessing Pipeline, Penanganan Class Imbalance dengan SMOTE, Feature Scaling, Hyperparameter Tuning GridSearchCV, serta Evaluasi Model).
 2. **`data_finish.csv`**: File input dataset cuaca historis yang wajib tersedia pada direktori yang sama untuk keperluan eksekusi kode dan demo presentasi.
-3. **`requirements.txt`**: File konfigurasi dependensi Python yang memuat pustaka pendukung seperti `pandas`, `numpy`, `matplotlib`, `seaborn`, dan `scikit-learn`.
+3. **`requirements.txt`**: File konfigurasi dependensi Python yang memuat pustaka pendukung seperti `pandas`, `numpy`, `matplotlib`, `seaborn`, `scikit-learn`, dan `imbalanced-learn`.
 
 ---
 
@@ -54,58 +54,35 @@ Notebook dapat dibuka dan dijalankan melalui beberapa alternatif platform:
 
 ---
 
-## Flowchart
+## Tahapan Eksperimen Machine Learning
 
-```mermaid
-graph TD
-    %% Nodes Declaration
-    A("Dataset Input (CSV)")
-    B("Inisialisasi & Standarisasi Nama Kolom")
-    C("Exploratory Data Analysis (EDA)<br>- Analisis Deskriptif<br>- Penanganan Missing Value<br>- Konversi Arah Angin")
-    D("Preprocessing Pipeline<br>- Feature Extraction Tanggal<br>- One-Hot Encoding<br>- Feature Dropping")
-    E("Dataset Final Siap Latih")
-    
-    F{"Pemisahan Data (Train & Test)"}
-    G("StandardScaler (Penskalaan Fitur)")
+1. **Exploratory Data Analysis (EDA):**
+   - Pemeriksaan bentuk dataset (`shape`), nilai hilang (`missing values`), dan tipe data.
+   - Analisis distribusi kelas target banjir serta fitur cuaca (Histplot, Countplot, Boxplot).
+   - Penanganan nilai hilang (`dropna`) dan konversi derajat arah angin (`0-360°`) ke kategori arah mata angin (N, NE, E, SE, S, SW, W, NW).
 
-    M1("Model 1: Decision Tree")
-    M2("Model 2: K-Nearest Neighbors (KNN)")
-    M3("Model 3: Logistic Regression")
+2. **Preprocessing Pipeline (`sklearn.pipeline.Pipeline`):**
+   - `DateEncoder`: Ekstraksi fitur tanggal menjadi bulan, hari, tahun, dan hari dalam minggu.
+   - `ArahAnginAvgEncoder` & `ArahAnginMaxEncoder`: One-Hot Encoding pada fitur arah angin.
+   - `NamaDaerahEncoder`: One-Hot Encoding pada fitur nama daerah.
+   - `FeatureDropper`: Menghapus kolom identifikasi stasiun (`id_stasiun`, `nama_stasiun`).
 
-    H("Evaluasi Model pada Data Uji<br>(Akurasi, Precision, Recall, F1-Score)")
-    I("Kesimpulan & Rekomendasi Model")
+3. **Data Splitting & Balancing:**
+   - Pemisahan data latih dan data uji menggunakan `StratifiedShuffleSplit` (80% Train, 20% Test, `random_state=42`).
+   - Penyeimbangan distribusi kelas target pada data latih menggunakan teknik **SMOTE** (*Synthetic Minority Over-sampling Technique*).
 
-    %% Alur Utama
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-    E --> F
+4. **Penskalaan Fitur (*Feature Scaling*):**
+   - `StandardScaler` diaplikasikan pada fitur data latih dan uji untuk model yang sensitif terhadap skala fitur (**KNN** dan **Logistic Regression**). Model **Decision Tree** menggunakan data tanpa standarisasi.
 
-    %% Alur Pemodelan (Dengan & Tanpa Scaling)
-    F -->|"Tanpa Scaling"| M1
-    F -->|"Scaling Fitur"| G
+5. **Pelatihan & Hyperparameter Tuning:**
+   - Pencarian parameter optimal menggunakan `GridSearchCV` dengan 5-Fold Cross Validation dan metrik scoring `f1_weighted`.
+   - Model yang dievaluasi:
+     - **K-Nearest Neighbors (KNN)**
+     - **Logistic Regression**
+     - **Decision Tree**
 
-    G --> M2
-    G --> M3
+6. **Evaluasi Model:**
+   - Evaluasi performa model pada data uji menggunakan metrik: **Accuracy**, **Precision (Weighted)**, **Recall (Weighted)**, dan **F1-Score (Weighted)**.
+   - Visualisasi hasil prediksi menggunakan **Confusion Matrix** (Heatmap Seaborn).
 
-    %% Alur Evaluasi
-    M1 --> H
-    M2 --> H
-    M3 --> H
-
-    H --> I
-
-    %% Class Assignment (Safe Method)
-    classDef startEnd fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff;
-    classDef process fill:#ecf0f1,stroke:#bdc3c7,stroke-width:2px,color:#2c3e50;
-    classDef split fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#fff;
-    classDef model fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff;
-    classDef eval fill:#2ecc71,stroke:#27ae60,stroke-width:2px,color:#fff;
-
-    class A,E,I startEnd;
-    class B,C,D,G process;
-    class F split;
-    class M1,M2,M3 model;
-    class H eval;
-```
+---
