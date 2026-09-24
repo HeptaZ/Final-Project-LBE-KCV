@@ -248,6 +248,34 @@ select option[value=""] {
   line-height: 1.8;
 }
 
+.status-badge {
+  display: inline-block;
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: bold;
+  padding: 8px 14px;
+  border-radius: var(--radius-input);
+  margin-bottom: var(--spacing-sm);
+}
+
+.status--banjir {
+  background: #fdecea;
+  color: var(--color-border-error);
+  border: 1px solid var(--color-border-error);
+}
+
+.status--aman {
+  background: #eafaf1;
+  color: #1e8449;
+  border: 1px solid #1e8449;
+}
+
+.status--error {
+  background: #fdf3e3;
+  color: #9a6700;
+  border: 1px solid #9a6700;
+}
+
 .result-note {
   margin: var(--spacing-sm) 0 0;
   font-size: 14px;
